@@ -2,3 +2,6 @@
 models
 .idea
 embeddings
+content
+pdf_db
+grobid-0.7.3

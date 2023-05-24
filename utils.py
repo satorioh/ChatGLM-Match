@@ -39,7 +39,7 @@ def init_knowledge_vector_store(path: str, embeddings):
             return None
         elif os.path.isdir(fold_path):
             try:
-                loader = DirectoryLoader(fold_path, glob='**/*.md')
+                loader = DirectoryLoader(fold_path, glob='**/*.pdf')
                 docs = loader.load()
                 print(f"{fold_path} 已成功加载")
             except Exception as err:
