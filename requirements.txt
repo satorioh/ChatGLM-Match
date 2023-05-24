@@ -12,11 +12,8 @@ langchain~=0.0.172
 sentence_transformers
 faiss-gpu
 tabulate
-PyPDF2
 pdfminer
 
 lxml~=4.9.2
 requests~=2.30.0
 pandas~=1.5.3
-scipy~=1.10.1
-numpy~=1.23.5

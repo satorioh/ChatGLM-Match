@@ -3,7 +3,7 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 import pandas as pd
 from langchain.docstore.document import Document
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from typing import Optional, List
 from helper import get_abs_path
@@ -55,7 +55,9 @@ def init_knowledge_vector_store(path: str, embeddings):
                 print(err)
                 print(f"{fold_path} 未能成功加载")
 
-        text_splitter = CharacterTextSplitter(chunk_size=250, chunk_overlap=0)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=800,
+                                                       separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""],
+                                                       chunk_overlap=0, )
         # 切割加载的 document
         print("start split docs...")
         split_docs = text_splitter.split_documents(docs)
@@ -66,12 +68,12 @@ def init_knowledge_vector_store(path: str, embeddings):
 
 
 def init_chain_proxy(llm_proxy: LLM, vector_store, top_k=5):
-    prompt_template = """你是一个专业的人工智能助手，以下是一些提供给你的已知内容，请你简洁和专业的来回答用户的问题，答案请使用中文。
+    prompt_template = """You are a helpful PDF file. Your task is to provide information and answer any questions. You should use the sections of the PDF as your source of information and try to provide concise and accurate answers to any questions asked by the user. If you are unable to find relevant information in the given sections, you will need to let the user know that the source does not contain relevant information but still try to provide an answer based on your general knowledge. You must refer to the corresponding section name and page that you refer to when answering. The following is the related information about the PDF file that will help you answer users' questions.
 
-已知内容:
+sections:
 {context}
 
-参考以上内容请回答如下问题:
+Please answer the following questions based on the above content:
 {question}"""
     prompt = PromptTemplate(
         template=prompt_template,
