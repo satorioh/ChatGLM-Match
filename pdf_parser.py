@@ -97,10 +97,10 @@ class GrobidSciPDFPaser(AbstractPDFParser):
         article_dict = self._retrive_or_parse()
         self.article_dict = article_dict
         self._get_metadata()
-        self.split_paragraphs = self.get_split_paragraphs()
-        self._contact_too_short_paragraphs()
-
-        self.flattn_paragraphs = self.get_paragraphs()
+        # self.split_paragraphs = self.get_split_paragraphs()
+        # self._contact_too_short_paragraphs()
+        #
+        # self.flattn_paragraphs = self.get_paragraphs()
         print("finish parse pdf")
 
     def get_paragraphs(self) -> List[Any]:
@@ -120,8 +120,8 @@ class GrobidSciPDFPaser(AbstractPDFParser):
         print("get metadata")
         for meta in ['authors', "pub_date", "abstract", "references", "doi", 'title', ]:
             self.metadata[meta] = self.article_dict[meta]
-        self.section_names = [section["heading"]
-                              for section in self.article_dict['sections']]
+        # self.section_names = [section["heading"]
+        #                       for section in self.article_dict['sections']]
         # self.section_names2page = {}
         # for section_name in self.section_names:
         #     section_page_index = self._find_section_page(section_name)

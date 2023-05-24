@@ -209,16 +209,16 @@ def parse_sections(article, as_list: bool = False):
                 text = "\n".join(text)
         if heading != "" or text != "":
             ref_dict = calculate_number_of_references(div)
-            sections.append(
-                {
-                    "heading": heading,
-                    "text": text,
-                    "all_paragraphs": all_paragraphs,
-                    "n_publication_ref": ref_dict["n_publication_ref"],
-                    "n_figure_ref": ref_dict["n_figure_ref"],
-                }
+            sections.append(heading + " " + text
+                # {
+                #     "heading": heading,
+                #     "text": text,
+                #     "all_paragraphs": all_paragraphs,
+                #     "n_publication_ref": ref_dict["n_publication_ref"],
+                #     "n_figure_ref": ref_dict["n_figure_ref"],
+                # }
             )
-    return sections
+    return "\n".join(sections)
 
 
 def parse_references(article):

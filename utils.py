@@ -1,7 +1,8 @@
 from langchain.llms.base import LLM
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-from langchain.document_loaders import DirectoryLoader
+import pandas as pd
+from langchain.docstore.document import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from typing import Optional, List
@@ -39,18 +40,28 @@ def init_knowledge_vector_store(path: str, embeddings):
             return None
         elif os.path.isdir(fold_path):
             try:
-                loader = DirectoryLoader(fold_path, glob='**/*.pdf')
-                docs = loader.load()
+                db_cache_path = get_abs_path('pdf_db/pdf_parser_grobid_scipdf.pkl')
+                db_cache = pd.read_pickle(db_cache_path)
+                for key, item in db_cache.items():
+                    doc = Document(
+                        page_content=item['sections'],
+                        metadata={"title": item["title"], "authors": item["authors"], "pub_date": item["pub_date"],
+                                  "abstract": item["abstract"], "source": item["title"] + ".pdf"}
+                    )
+                    print(doc)
+                    docs.append(doc)
                 print(f"{fold_path} 已成功加载")
             except Exception as err:
                 print(err)
                 print(f"{fold_path} 未能成功加载")
+
         text_splitter = CharacterTextSplitter(chunk_size=250, chunk_overlap=0)
         # 切割加载的 document
         print("start split docs...")
         split_docs = text_splitter.split_documents(docs)
         print("split docs finished")
         vector_store = FAISS.from_documents(split_docs, embeddings)
+        vector_store.save_local("faiss_index")
         return vector_store
 
 
