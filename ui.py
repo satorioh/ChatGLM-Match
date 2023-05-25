@@ -126,10 +126,6 @@ with st.form("form", True):
         q = proxy_chain(prompt_text)
         st.session_state.history.append((prompt_text, ''))
         print(f"返回--->>>:{q}")
-        # source_text = [f"""出处 [{inum + 1}] {os.path.split(doc.metadata['source'])[-1]}：\n\n{doc.page_content}\n\n"""
-        #                for inum, doc in
-        #                enumerate(q["source_documents"])]
-        # format_source_text = "\n\n" + "\n\n".join(source_text)
         source = "\n\n"
         source += "".join(
             [

@@ -52,12 +52,11 @@ def init_knowledge_vector_store(path: str, embeddings):
                         metadata={"title": item["title"], "authors": item["authors"], "pub_date": item["pub_date"],
                                   "abstract": item["abstract"], "source": item["title"] + ".pdf"}
                     )
-                    print(doc)
                     docs.append(doc)
-                print(f"{fold_path} 已成功加载")
+                print(f"Document({fold_path}) 已成功加载")
             except Exception as err:
                 print(err)
-                print(f"{fold_path} 未能成功加载")
+                print(f"Document({fold_path}) 未能成功加载")
 
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=800,
                                                        separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""],
