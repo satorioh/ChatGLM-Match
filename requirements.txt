@@ -16,3 +16,4 @@ lxml~=4.9.2
 requests~=2.30.0
 pandas~=1.5.3
 tensorflow-hub
+tensorflow>=2.0.0
