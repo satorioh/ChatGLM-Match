@@ -3,8 +3,8 @@ import streamlit as st
 import sentence_transformers
 from transformers import AutoModel, AutoTokenizer
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
-from utils import ProxyLLM, init_chain_proxy, init_knowledge_vector_store
-from helper import get_abs_path
+from proxy_llm import ProxyLLM, init_chain_proxy, init_knowledge_vector_store
+from utils import get_abs_path
 from configs.global_config import (
     MODEL_DIR,
     RAW_PDF_DIR,
