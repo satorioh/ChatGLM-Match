@@ -3,17 +3,17 @@ import streamlit as st
 import sentence_transformers
 from transformers import AutoModel, AutoTokenizer
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain.embeddings import TensorflowHubEmbeddings
 from proxy_llm import ProxyLLM, init_chain_proxy, init_knowledge_vector_store
 from utils import get_abs_path
 from configs.global_config import (
     MODEL_DIR,
     RAW_PDF_DIR,
-    EMBEDDING_MODEL_DIR
+    TF_EMBEDDING_MODEL_URL
 )
 
 source_folder = get_abs_path(RAW_PDF_DIR)
 models_folder = get_abs_path(MODEL_DIR)
-embeddings_folder = get_abs_path(EMBEDDING_MODEL_DIR)
 
 MAX_CONTEXT = 720
 
@@ -35,10 +35,9 @@ def get_model():
     model = AutoModel.from_pretrained(
         models_folder, trust_remote_code=True).half().cuda()
     model = model.eval()
-    embeddings = HuggingFaceEmbeddings(
-        model_name=embeddings_folder, )
-    embeddings.client = sentence_transformers.SentenceTransformer(
-        embeddings.model_name, device="cuda")
+    embeddings = TensorflowHubEmbeddings(model_url=TF_EMBEDDING_MODEL_URL)
+    # embeddings.client = sentence_transformers.SentenceTransformer(
+    #     embeddings.model_name, device="cuda")
     return tokenizer, model, embeddings
 
 
@@ -129,7 +128,7 @@ with st.form("form", True):
         source = "\n\n"
         source += "".join(
             [
-                f"""> *出处[{i + 1}]{os.path.split(doc.metadata['source'])[-1]}*\n"""
+                f"""> *出处[{i + 1}]{os.path.split(doc.metadata['source'])[-1]}*\n\n"""
                 for i, doc in
                 enumerate(q["source_documents"])])
         st.session_state.ctx = predict(q['result'], source, st.session_state.ctx)
