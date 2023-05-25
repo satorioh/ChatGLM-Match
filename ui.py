@@ -9,7 +9,7 @@ from utils import get_abs_path
 from configs.global_config import (
     MODEL_DIR,
     RAW_PDF_DIR,
-    TF_EMBEDDING_MODEL_URL
+    EMBEDDING_MODEL_DIR
 )
 
 source_folder = get_abs_path(RAW_PDF_DIR)
@@ -35,7 +35,7 @@ def get_model():
     model = AutoModel.from_pretrained(
         models_folder, trust_remote_code=True).half().cuda()
     model = model.eval()
-    embeddings = TensorflowHubEmbeddings(model_url=TF_EMBEDDING_MODEL_URL)
+    embeddings = TensorflowHubEmbeddings(model_url=get_abs_path(EMBEDDING_MODEL_DIR))
     # embeddings.client = sentence_transformers.SentenceTransformer(
     #     embeddings.model_name, device="cuda")
     return tokenizer, model, embeddings
