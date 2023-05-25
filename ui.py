@@ -1,19 +1,24 @@
 import os
-from transformers import AutoModel, AutoTokenizer
+import streamlit as st
 import sentence_transformers
+from transformers import AutoModel, AutoTokenizer
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from utils import ProxyLLM, init_chain_proxy, init_knowledge_vector_store
-import streamlit as st
 from helper import get_abs_path
+from configs.global_config import (
+    MODEL_DIR,
+    RAW_PDF_DIR,
+    EMBEDDING_MODEL_DIR
+)
 
-source_folder = get_abs_path('content')
-models_folder = get_abs_path('models/chatglm-6b-int4')
-embeddings_folder = get_abs_path('embeddings/text2vec-large-chinese')
+source_folder = get_abs_path(RAW_PDF_DIR)
+models_folder = get_abs_path(MODEL_DIR)
+embeddings_folder = get_abs_path(EMBEDDING_MODEL_DIR)
 
 MAX_CONTEXT = 720
 
 st.set_page_config(
-    page_title="AI 法律小助手",
+    page_title="测试",
     page_icon=":robot:",
     menu_items={"about": '''
                 Author: FrostMiKu & Robin.Wang
@@ -56,10 +61,10 @@ if 'vecdb' not in st.session_state:
     st.session_state.vecdb = get_vector_store(embeddings)
 proxy_chain = init_chain_proxy(ProxyLLM(), st.session_state.vecdb, 5)
 
-st.title("# AI 法律小助手👋")
+st.title("# 测试👋")
 ctx_dom = st.empty()
 question_dom = st.markdown(
-    ">  回答由 AI 检索法律文件后生成，不保证准确率，仅供参考学习！"
+    ">  回答由 AI 检索文件后生成，不保证准确率，仅供参考学习！"
 )
 md_dom = st.empty()
 st.write("")

@@ -1,16 +1,11 @@
-from typing import List, Dict, Any
-
 from base_class import AbstractPDFParser
-import pickle
 from scipdf_utils import parse_pdf_to_dict
+from configs.global_config import PDF_DB_NAME
+import pickle
 
 
 class GrobidSciPDFPaser(AbstractPDFParser):
-    # import pysbd
-    # seg_en = pysbd.Segmenter(language="en", clean=False)
-    # seg_chinese = pysbd.Segmenter(language="zh", clean=False)
-
-    def __init__(self, pdf_link, db_name="grobid_scipdf", short_thereshold=30) -> None:
+    def __init__(self, pdf_link, db_name=PDF_DB_NAME) -> None:
         """Initialize the PDF parser
 
             Args:
@@ -24,55 +19,7 @@ class GrobidSciPDFPaser(AbstractPDFParser):
         self.pdf_link = pdf_link
         self.pdf = None
         self.metadata = {}
-        self.flattn_paragraphs = None
-        self.split_paragraphs = None
-        self.short_thereshold = short_thereshold
         self.parse_pdf()
-
-    def _contact_too_short_paragraphs(self, ):
-        """Contact too short paragraphs or discard them"""
-        print("contact_too_short_paragraphs")
-        for i, section in enumerate(self.split_paragraphs):
-            # section_name = section['heading']
-            paragraphs = section['texts']
-            new_paragraphs = []
-            for paragraph in paragraphs:
-                if len(paragraph) <= self.short_thereshold and len(paragraph.strip()) != 0:
-                    if len(new_paragraphs) != 0:
-                        new_paragraphs[-1] += paragraph
-                    else:
-                        new_paragraphs.append(paragraph)
-                else:
-                    new_paragraphs.append(paragraph)
-            self.split_paragraphs[i]['texts'] = new_paragraphs
-
-    @staticmethod
-    def _find_largest_font_string(file_name, search_string):
-        print(f"find_largest_font_string in: {file_name} for {search_string}")
-        search_string = search_string.strip()
-        max_font_size = -1
-        page_number = -1
-        from pdfminer.high_level import extract_pages
-        from pdfminer.layout import LTTextContainer, LTChar
-        try:
-            for index, page_layout in enumerate(extract_pages(file_name)):
-                for element in page_layout:
-                    if isinstance(element, LTTextContainer):
-                        for text_line in element:
-                            if search_string in text_line.get_text():
-                                for character in text_line:
-                                    if isinstance(character, LTChar):
-                                        if character.size > max_font_size:
-                                            max_font_size = character.size
-                                            page_number = index
-            return page_number + 1 if page_number != -1 else -1
-        except Exception as e:
-            print(f"find_largest_font_string error:{e}")
-            return -1
-
-    def _find_section_page(self, section_name) -> int:
-        print(f"find_section_page: {section_name}")
-        return GrobidSciPDFPaser._find_largest_font_string(self.pdf_link, section_name)
 
     def _retrive_or_parse(self, ):
         """Return pdf dict from cache if present, otherwise parse the pdf"""
@@ -86,10 +33,6 @@ class GrobidSciPDFPaser(AbstractPDFParser):
                 pickle.dump(self.db_cache, db_cache_file)
         return self.db_cache[(self.pdf_link, db_name)]
 
-    @staticmethod
-    def _check_chinese(text) -> None:
-        return any(u'\u4e00' <= char <= u'\u9fff' for char in text)
-
     def parse_pdf(self) -> None:
         print("start parse pdf")
         """Parse the PDF file
@@ -97,60 +40,9 @@ class GrobidSciPDFPaser(AbstractPDFParser):
         article_dict = self._retrive_or_parse()
         self.article_dict = article_dict
         self._get_metadata()
-        # self.split_paragraphs = self.get_split_paragraphs()
-        # self._contact_too_short_paragraphs()
-        #
-        # self.flattn_paragraphs = self.get_paragraphs()
         print("finish parse pdf")
-
-    def get_paragraphs(self) -> List[Any]:
-        print("get_paragraphs")
-        """Get the paragraphs of the PDF file
-        """
-        paragraphs = []
-        self.content2section = {}
-        for section in self.split_paragraphs:
-            # paragraphs+=[section["heading"]]
-            paragraphs += section["texts"]
-            for para in section["texts"]:
-                self.content2section[para] = section["heading"]
-        return paragraphs
 
     def _get_metadata(self) -> None:
         print("get metadata")
         for meta in ['authors', "pub_date", "abstract", "references", "doi", 'title', ]:
             self.metadata[meta] = self.article_dict[meta]
-        # self.section_names = [section["heading"]
-        #                       for section in self.article_dict['sections']]
-        # self.section_names2page = {}
-        # for section_name in self.section_names:
-        #     section_page_index = self._find_section_page(section_name)
-        #     self.section_names2page.update({section_name: section_page_index})
-        # self.section_names_with_page_index = [section_name + " (Page {})".format(
-        #     self.section_names2page[section_name]) for section_name in self.section_names]
-
-    def get_split_paragraphs(self, ) -> List[Dict[str, Any]]:
-        print("get_split_paragraphs")
-        section_pair_list = []
-        for section in self.article_dict['sections']:
-            section_pair_list.append({
-                "heading": section["heading"],
-                "texts": section["all_paragraphs"],
-            })
-        return section_pair_list
-
-    # @staticmethod
-    # def _determine_optimal_split_of_pargraphs(section_pair_list) -> None:
-    #     """
-    #     split based on the some magic rules
-    #     """
-    #     import pysbd
-    #     for section_pair in section_pair_list:
-    #         if GrobidSciPDFPaser._check_chinese(section_pair["text"]):
-    #             seg = GrobidSciPDFPaser.seg_chinese
-    #         else:
-    #             seg = GrobidSciPDFPaser.seg_en
-    #         section_pair["texts"] = seg.segment(section_pair["texts"])
-    #         section_pair["texts"] = [
-    #             para for para in section_pair["text"] if len(para) > 2]
-    #     return section_pair_list

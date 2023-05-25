@@ -1,21 +1,25 @@
+import os
+import pandas as pd
 from langchain.llms.base import LLM
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-import pandas as pd
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from typing import Optional, List
 from helper import get_abs_path
-import os
+from configs.global_config import (
+    PDF_DB_CACHE_PATH,
+    FAISS_INDEX_DIR
+)
 
-index_folder = get_abs_path('faiss_index')
+index_folder = get_abs_path(FAISS_INDEX_DIR)
 
 
 class ProxyLLM(LLM):
     @property
     def _llm_type(self) -> str:
-        return "custom"
+        return "ChatGLM"
 
     def _call(self, prompt: str, stop: Optional[List[str]] = None) -> str:
         if stop is not None:
@@ -27,7 +31,7 @@ def init_knowledge_vector_store(path: str, embeddings):
     if os.path.exists(index_folder):
         try:
             print("start load faiss index")
-            vector_store = FAISS.load_local("faiss_index", embeddings)
+            vector_store = FAISS.load_local(FAISS_INDEX_DIR, embeddings)
             print("load faiss index finished")
             return vector_store
         except Exception as err:
@@ -40,7 +44,7 @@ def init_knowledge_vector_store(path: str, embeddings):
             return None
         elif os.path.isdir(fold_path):
             try:
-                db_cache_path = get_abs_path('pdf_db/pdf_parser_grobid_scipdf.pkl')
+                db_cache_path = get_abs_path(PDF_DB_CACHE_PATH)
                 db_cache = pd.read_pickle(db_cache_path)
                 for key, item in db_cache.items():
                     doc = Document(
@@ -63,7 +67,7 @@ def init_knowledge_vector_store(path: str, embeddings):
         split_docs = text_splitter.split_documents(docs)
         print("split docs finished")
         vector_store = FAISS.from_documents(split_docs, embeddings)
-        vector_store.save_local("faiss_index")
+        vector_store.save_local(FAISS_INDEX_DIR)
         return vector_store
 
 
