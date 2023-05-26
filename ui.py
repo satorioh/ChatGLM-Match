@@ -1,18 +1,14 @@
 import os
 import streamlit as st
-import sentence_transformers
 from transformers import AutoModel, AutoTokenizer
-from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.embeddings import TensorflowHubEmbeddings
 from proxy_llm import ProxyLLM, init_chain_proxy, init_knowledge_vector_store
 from utils import get_abs_path
 from configs.global_config import (
     MODEL_DIR,
-    RAW_PDF_DIR,
     EMBEDDING_MODEL_DIR
 )
 
-source_folder = get_abs_path(RAW_PDF_DIR)
 models_folder = get_abs_path(MODEL_DIR)
 
 MAX_CONTEXT = 720
@@ -43,8 +39,7 @@ def get_model():
 
 @st.cache_resource
 def get_vector_store(_embeddings_instance):
-    vector_store = init_knowledge_vector_store(
-        source_folder, _embeddings_instance)
+    vector_store = init_knowledge_vector_store(_embeddings_instance)
     return vector_store
 
 
