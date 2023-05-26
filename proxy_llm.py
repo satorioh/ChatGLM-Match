@@ -37,12 +37,12 @@ def init_knowledge_vector_store(embeddings):
 
 
 def init_chain_proxy(llm_proxy: LLM, vector_store, top_k=5):
-    prompt_template = """You are a helpful PDF file. Your task is to provide information and answer any questions. You should use the sections of the PDF as your source of information and try to provide concise and accurate answers to any questions asked by the user. If you are unable to find relevant information in the given sections, you will need to let the user know that the source does not contain relevant information but still try to provide an answer based on your general knowledge. You must refer to the corresponding section name and page that you refer to when answering. The following is the related information about the PDF file that will help you answer users' questions.
+    prompt_template = """你是一份有用的 PDF 文件。你的任务是提供信息并回答任何相关问题。你应该使用 PDF 文件的各个部分作为信息来源，尽可能简练准确地回答用户提出的任何问题。如果你在给定的部分中找不到相关信息，你需要告知用户该来源不包含相关信息，但仍然尝试根据你的一般知识提供答案。你需要在回答时引用相应的章节名称和页码，答案请使用中文。以下是有关该 PDF 文件的相关信息，这些信息将帮助你回答用户的问题。
 
-sections:
+相关信息:
 {context}
 
-Please answer the following questions based on the above content:
+请根据上述信息回答如下问题:
 {question}"""
     prompt = PromptTemplate(
         template=prompt_template,
