@@ -1,5 +1,6 @@
 import os
 import streamlit as st
+import tensorflow as tf
 from transformers import AutoModel, AutoTokenizer
 from langchain.embeddings import TensorflowHubEmbeddings
 from proxy_llm import ProxyLLM, init_chain_proxy, init_knowledge_vector_store
@@ -24,8 +25,25 @@ st.set_page_config(
 )
 
 
+def tf_limit_memory():
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        print("start limit tf memory")
+        # Restrict TensorFlow to only allocate 1GB of memory on the first GPU
+        try:
+            tf.config.set_logical_device_configuration(
+                gpus[0],
+                [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=1024)])
+            logical_gpus = tf.config.list_logical_devices('GPU')
+            print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+        except RuntimeError as e:
+            # Virtual devices must be set before GPUs have been initialized
+            print(e)
+
+
 @st.cache_resource
 def get_model():
+    tf_limit_memory()
     tokenizer = AutoTokenizer.from_pretrained(
         models_folder, trust_remote_code=True)
     model = AutoModel.from_pretrained(
