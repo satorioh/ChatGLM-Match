@@ -14,6 +14,7 @@ from configs.global_config import (
 
 file_list = get_file_list(get_abs_path(RAW_PDF_DIR))
 for pdf_path in file_list:
+    print(f"pdf path: {pdf_path}")
     pdf = GrobidSciPDFPaser(
         pdf_link=pdf_path
     )
