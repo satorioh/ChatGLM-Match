@@ -329,12 +329,12 @@ def convert_article_soup_to_dict(article, as_list: bool = False):
         article_dict["title"] = title
         article_dict["abstract"] = parse_abstract(article)
         article_dict["sections"] = parse_sections(article, as_list=as_list)
-        article_dict["references"] = parse_references(article)
-        article_dict["figures"] = parse_figure_caption(article)
+        # article_dict["references"] = parse_references(article)
+        # article_dict["figures"] = parse_figure_caption(article)
 
-        doi = article.find("idno", attrs={"type": "DOI"})
-        doi = doi.text if doi is not None else ""
-        article_dict["doi"] = doi
+        # doi = article.find("idno", attrs={"type": "DOI"})
+        # doi = doi.text if doi is not None else ""
+        # article_dict["doi"] = doi
 
         return article_dict
     else:
