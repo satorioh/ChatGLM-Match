@@ -269,7 +269,7 @@ def parse_figure_caption(article):
     figures = article.find_all("figure")
     for figure in figures:
         figure_type = figure.attrs.get("type") or ""
-        figure_id = figure.attrs["xml:id"] or ""
+        figure_id = figure.attrs.get("xml:id") or ""
         label = figure.find("label").text
         if figure_type == "table":
             caption = figure.find("figdesc").text
@@ -329,12 +329,12 @@ def convert_article_soup_to_dict(article, as_list: bool = False):
         article_dict["title"] = title
         article_dict["abstract"] = parse_abstract(article)
         article_dict["sections"] = parse_sections(article, as_list=as_list)
-        # article_dict["references"] = parse_references(article)
-        # article_dict["figures"] = parse_figure_caption(article)
+        article_dict["references"] = parse_references(article)
+        article_dict["figures"] = parse_figure_caption(article)
 
-        # doi = article.find("idno", attrs={"type": "DOI"})
-        # doi = doi.text if doi is not None else ""
-        # article_dict["doi"] = doi
+        doi = article.find("idno", attrs={"type": "DOI"})
+        doi = doi.text if doi is not None else ""
+        article_dict["doi"] = doi
 
         return article_dict
     else:
