@@ -29,7 +29,7 @@ except Exception as err:
     print(err)
     print(f"Document 未能成功加载")
 
-tf_limit_memory()
+# tf_limit_memory()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
                                                separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""],
                                                chunk_overlap=200, )
