@@ -3,7 +3,10 @@ from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import TensorflowHubEmbeddings
 from langchain.vectorstores import FAISS
-from utils import get_abs_path
+from utils import (
+    get_abs_path,
+    tf_limit_memory
+)
 from configs.global_config import (
     PDF_DB_CACHE_PATH,
     FAISS_INDEX_DIR,
@@ -26,6 +29,7 @@ except Exception as err:
     print(err)
     print(f"Document 未能成功加载")
 
+tf_limit_memory(memory_limit=6144)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
                                                separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""],
                                                chunk_overlap=200, )
