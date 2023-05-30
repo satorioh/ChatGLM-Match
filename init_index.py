@@ -1,24 +1,14 @@
 import pandas as pd
-from pdf_parser import GrobidSciPDFPaser
-from utils import get_abs_path, get_file_list
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import TensorflowHubEmbeddings
 from langchain.vectorstores import FAISS
+from utils import get_abs_path
 from configs.global_config import (
-    RAW_PDF_DIR,
     PDF_DB_CACHE_PATH,
     FAISS_INDEX_DIR,
     EMBEDDING_MODEL_DIR
 )
-
-file_list = get_file_list(get_abs_path(RAW_PDF_DIR))
-for pdf_path in file_list:
-    print(f"pdf path: {pdf_path}")
-    pdf = GrobidSciPDFPaser(
-        pdf_link=pdf_path
-    )
-    print(pdf.metadata)
 
 docs = []
 try:
