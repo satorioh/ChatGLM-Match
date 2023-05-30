@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import TensorflowHubEmbeddings
@@ -29,7 +30,7 @@ except Exception as err:
     print(err)
     print(f"Document 未能成功加载")
 
-# tf_limit_memory()
+os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
                                                separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""],
                                                chunk_overlap=200, )
