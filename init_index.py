@@ -47,8 +47,8 @@ def embed_documents(split_docs):
         print(f"start faiss embedding {index}")
         vector_store.add_documents([split_doc])
         vector_store.save_local(FAISS_INDEX_DIR)
-        print(f"faiss embedding {index} saved")
         yield split_doc
 
 
-embed_documents(split_docs)
+for doc in embed_documents(split_docs):
+    print(f"faiss embedding saved")
