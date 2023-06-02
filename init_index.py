@@ -40,13 +40,15 @@ print("start split docs...")
 split_docs = text_splitter.split_documents(docs)
 print("split docs finished")
 vector_store = FAISS.from_documents([split_docs[0]], embeddings)
+vector_store.save_local(FAISS_INDEX_DIR)
 
 
 def embed_documents(split_docs):
     for index, split_doc in enumerate(split_docs):
         print(f"start faiss embedding {index}")
-        vector_store.add_documents([split_doc])
-        vector_store.save_local(FAISS_INDEX_DIR)
+        vs = vector_store.load_local(FAISS_INDEX_DIR, embeddings)
+        vs.add_documents([split_doc])
+        vs.save_local(FAISS_INDEX_DIR)
         yield split_doc
 
 
