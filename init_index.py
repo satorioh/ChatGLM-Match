@@ -39,5 +39,16 @@ embeddings = TensorflowHubEmbeddings(model_url=get_abs_path(EMBEDDING_MODEL_DIR)
 print("start split docs...")
 split_docs = text_splitter.split_documents(docs)
 print("split docs finished")
-vector_store = FAISS.from_documents(split_docs, embeddings)
-vector_store.save_local(FAISS_INDEX_DIR)
+
+
+def embed_documents(split_docs):
+    vector_store = FAISS.load_local(FAISS_INDEX_DIR, embeddings)
+    for index, split_doc in enumerate(split_docs):
+        print(f"start faiss embedding {index}")
+        vector_store.add_documents([split_doc])
+        vector_store.save_local(FAISS_INDEX_DIR)
+        print(f"faiss embedding {index} saved")
+        yield split_doc
+
+
+embed_documents(split_docs)
