@@ -51,7 +51,6 @@ def embed_documents(group_docs):
     vs = vector_store.load_local(FAISS_INDEX_DIR, embeddings)
     vs.add_documents(group_docs)
     vs.save_local(FAISS_INDEX_DIR)
-    yield group_docs
 
 
 for index, group in enumerate(groups):
