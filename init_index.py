@@ -42,15 +42,19 @@ print("split docs finished")
 vector_store = FAISS.from_documents([split_docs[0]], embeddings)
 vector_store.save_local(FAISS_INDEX_DIR)
 
-
-def embed_documents(split_docs):
-    for index, split_doc in enumerate(split_docs):
-        print(f"start faiss embedding {index}")
-        vs = vector_store.load_local(FAISS_INDEX_DIR, embeddings)
-        vs.add_documents([split_doc])
-        vs.save_local(FAISS_INDEX_DIR)
-        yield split_doc
+group_size = 10
+groups = [split_docs[i:i + group_size] for i in range(0, len(split_docs), group_size)]
+print(f"doc groups length: {len(groups)}")
 
 
-for doc in embed_documents(split_docs[1:]):
+def embed_documents(group_docs):
+    vs = vector_store.load_local(FAISS_INDEX_DIR, embeddings)
+    vs.add_documents(group_docs)
+    vs.save_local(FAISS_INDEX_DIR)
+    yield group_docs
+
+
+for index, group in enumerate(groups):
+    print(f"start faiss embedding {index}")
+    embed_documents(group)
     print(f"faiss embedding saved")
