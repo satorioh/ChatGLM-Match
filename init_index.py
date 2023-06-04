@@ -38,10 +38,9 @@ embeddings = TensorflowHubEmbeddings(model_url=get_abs_path(EMBEDDING_MODEL_DIR)
 # 切割加载的 document
 print("start split docs...")
 split_docs = text_splitter.split_documents(docs)
-print(f"split_docs[0] ---> {split_docs[0]}")
 print("split docs finished")
-# vector_store = FAISS.from_documents([split_docs[0]], embeddings)
-# vector_store.save_local(FAISS_INDEX_DIR)
+vector_store = FAISS.from_documents(split_docs[:10], embeddings)
+vector_store.save_local(FAISS_INDEX_DIR)
 #
 # group_size = 10
 # groups = [split_docs[i:i + group_size] for i in range(0, len(split_docs), group_size)]
