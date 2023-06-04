@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from transformers import AutoModel, AutoTokenizer
 from langchain.embeddings import TensorflowHubEmbeddings
+from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from proxy_llm import ProxyLLM, init_chain_proxy, init_knowledge_vector_store
 from utils import (
     get_abs_path,
@@ -35,7 +36,7 @@ def get_model():
     model = AutoModel.from_pretrained(
         models_folder, trust_remote_code=True).half().cuda()
     model = model.eval()
-    embeddings = TensorflowHubEmbeddings(model_url=get_abs_path(EMBEDDING_MODEL_DIR))
+    embeddings = HuggingFaceEmbeddings(model_name=get_abs_path(EMBEDDING_MODEL_DIR))
     # embeddings.client = sentence_transformers.SentenceTransformer(
     #     embeddings.model_name, device="cuda")
     return tokenizer, model, embeddings
