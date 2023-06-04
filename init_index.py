@@ -3,6 +3,7 @@ import os
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import TensorflowHubEmbeddings
+from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
 from utils import (
     get_abs_path,
@@ -32,7 +33,8 @@ except Exception as err:
 
 os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
-embeddings = TensorflowHubEmbeddings(model_url=get_abs_path(EMBEDDING_MODEL_DIR))
+# embeddings = TensorflowHubEmbeddings(model_url=get_abs_path(EMBEDDING_MODEL_DIR))
+embeddings = HuggingFaceEmbeddings(model_name=get_abs_path(EMBEDDING_MODEL_DIR))
 # 切割加载的 document
 print("start split docs...")
 split_docs = text_splitter.split_documents(docs)
