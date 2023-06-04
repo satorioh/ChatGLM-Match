@@ -19,7 +19,6 @@ try:
     db_cache_path = get_abs_path(PDF_DB_CACHE_PATH)
     db_cache = pd.read_pickle(db_cache_path)
     for key, item in db_cache.items():
-        print(f"Content ---> {item['sections']}")
         doc = Document(
             page_content=item['sections'],
             metadata={"title": item["title"], "authors": item["authors"], "pub_date": item["pub_date"],
