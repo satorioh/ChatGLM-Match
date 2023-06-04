@@ -32,8 +32,7 @@ except Exception as err:
 
 os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
-embeddings = TensorflowHubEmbeddings(model_url=get_abs_path(EMBEDDING_MODEL_DIR),
-                                     custom_options='gpu_private_memory_fraction=0.1')
+embeddings = TensorflowHubEmbeddings(model_url=get_abs_path(EMBEDDING_MODEL_DIR))
 # 切割加载的 document
 print("start split docs...")
 split_docs = text_splitter.split_documents(docs)

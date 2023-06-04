@@ -10,7 +10,7 @@ nltk
 beautifulsoup4~=4.12.2
 langchain~=0.0.172
 sentence_transformers
-faiss-gpu
+faiss-cpu
 tabulate
 lxml~=4.9.2
 requests~=2.30.0
