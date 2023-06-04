@@ -13,7 +13,8 @@ from configs.global_config import (
     EMBEDDING_MODEL_DIR
 )
 
-models_folder = get_abs_path(MODEL_DIR)
+# models_folder = get_abs_path(MODEL_DIR)
+models_folder = MODEL_DIR
 
 MAX_CONTEXT = 720
 
