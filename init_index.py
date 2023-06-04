@@ -39,7 +39,7 @@ embeddings = HuggingFaceEmbeddings(model_name=get_abs_path(EMBEDDING_MODEL_DIR))
 print("start split docs...")
 split_docs = text_splitter.split_documents(docs)
 print("split docs finished")
-vector_store = FAISS.from_documents(split_docs[:10], embeddings)
+vector_store = FAISS.from_documents(split_docs, embeddings)
 vector_store.save_local(FAISS_INDEX_DIR)
 #
 # group_size = 10
