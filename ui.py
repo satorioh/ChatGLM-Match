@@ -136,7 +136,7 @@ with st.form("form", True):
             [
                 f"""> *出处[{i + 1}] {name}*\n\n"""
                 for i, name in
-                seen_sources])
+                enumerate(seen_sources)])
         st.session_state.ctx = predict(q['result'], source, st.session_state.ctx)
         if st.session_state.first_run:
             st.session_state.first_run = False
