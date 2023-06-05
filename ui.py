@@ -125,12 +125,18 @@ with st.form("form", True):
         q = proxy_chain(prompt_text)
         st.session_state.history.append((prompt_text, ''))
         print(f"返回--->>>:{q}")
+        seen_sources = set()
+        for i, doc in enumerate(q["source_documents"]):
+            source_name = os.path.split(doc.metadata['source'])[-1]
+            if source_name in seen_sources:
+                continue
+            seen_sources.add(source_name)
         source = "\n\n"
         source += "".join(
             [
-                f"""> *出处[{i + 1}] {os.path.split(doc.metadata['source'])[-1]}*\n\n"""
-                for i, doc in
-                enumerate(q["source_documents"])])
+                f"""> *出处[{i + 1}] {name}*\n\n"""
+                for i, name in
+                seen_sources])
         st.session_state.ctx = predict(q['result'], source, st.session_state.ctx)
         if st.session_state.first_run:
             st.session_state.first_run = False
