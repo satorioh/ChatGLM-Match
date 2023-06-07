@@ -39,8 +39,8 @@ proxy_chain = init_chain_proxy(ProxyLLM(), vecdb, 5)
 
 def predict(input, history=None):
     print(f"预测--->{input}")
-    for resp in model.stream_chat(tokenizer, input, history, max_length=4096, top_p=0.8,
-                                  temperature=0.9):
+    for resp, history in model.stream_chat(tokenizer, input, history, max_length=4096, top_p=0.8,
+                                           temperature=0.9):
         print(f"回答--->{resp}")
         return resp
 
@@ -90,4 +90,4 @@ def invoke(questions_path):
 
 if __name__ == "__main__":
     results = invoke('questions')
-    print(results)
+    # print(results)
