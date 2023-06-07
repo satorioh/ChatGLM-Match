@@ -53,7 +53,7 @@ def invoke(questions_path):
 
     # use your finetuned model to do inference
 
-    NUM_OF_QUESTIONS = 1
+    NUM_OF_QUESTIONS = 10
     results = {}
     for i in range(NUM_OF_QUESTIONS):
         # 问题
