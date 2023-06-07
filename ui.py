@@ -96,6 +96,8 @@ def predict(input, source, history=None):
 
     for resp, history in model.stream_chat(tokenizer, input, history, max_length=4096, top_p=0.8,
                                            temperature=0.9):
+        print(f"回答--->{resp}")
+        print(f"历史--->{history}")
         md_dom.markdown(resp + source)
         response = resp + source
     q, _ = st.session_state.history.pop()
