@@ -1,7 +1,6 @@
 # track_2
 import json
 import os
-import streamlit as st
 from transformers import AutoModel, AutoTokenizer
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from proxy_llm import ProxyLLM, init_chain_proxy, init_knowledge_vector_store
@@ -16,8 +15,6 @@ from configs.global_config import (
 
 models_folder = get_abs_path(MODEL_DIR)
 
-
-@st.cache_resource
 def get_model():
     tf_limit_memory()
     tokenizer = AutoTokenizer.from_pretrained(
@@ -29,16 +26,14 @@ def get_model():
     return tokenizer, model, embeddings
 
 
-@st.cache_resource
 def get_vector_store(_embeddings_instance):
     vector_store = init_knowledge_vector_store(_embeddings_instance)
     return vector_store
 
 
 tokenizer, model, embeddings = get_model()
-if 'vecdb' not in st.session_state:
-    st.session_state.vecdb = get_vector_store(embeddings)
-proxy_chain = init_chain_proxy(ProxyLLM(), st.session_state.vecdb, 5)
+vecdb = get_vector_store(embeddings)
+proxy_chain = init_chain_proxy(ProxyLLM(), vecdb, 5)
 
 
 def predict(input):
