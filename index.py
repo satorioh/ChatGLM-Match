@@ -54,13 +54,13 @@ def invoke(questions_path):
 
     # use your finetuned model to do inference
 
-    NUM_OF_QUESTIONS = 10
+    NUM_OF_QUESTIONS = 1
     results = {}
     for i in range(NUM_OF_QUESTIONS):
         # 问题
         question = f"{questions[i]}"
         q = proxy_chain(question)
-        print(f"返回--->>>:{q}")
+        print(f"返回--->>>:{q}", flush=True)
         seen_sources = set()
         for x, doc in enumerate(q["source_documents"]):
             source_name = os.path.split(doc.metadata['source'])[-1]
