@@ -124,7 +124,7 @@ with st.form("form", True):
             ":face_with_cowboy_hat:\n\n{}\n\n---\n".format(prompt_text))
         q = proxy_chain(prompt_text)
         st.session_state.history.append((prompt_text, ''))
-        print(f"返回--->>>:{q}")
+        # print(f"返回--->>>:{q}")
         seen_sources = set()
         for i, doc in enumerate(q["source_documents"]):
             source_name = os.path.split(doc.metadata['source'])[-1]

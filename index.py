@@ -37,9 +37,11 @@ vecdb = get_vector_store(embeddings)
 proxy_chain = init_chain_proxy(ProxyLLM(), vecdb, 5)
 
 
-def predict(input):
-    for resp in model.stream_chat(tokenizer, input, max_length=4096, top_p=0.8,
+def predict(input, history=None):
+    print(f"预测--->{input}")
+    for resp in model.stream_chat(tokenizer, input, history, max_length=4096, top_p=0.8,
                                   temperature=0.9):
+        print(f"回答--->{resp}")
         return resp
 
 
