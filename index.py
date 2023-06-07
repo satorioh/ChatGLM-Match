@@ -37,12 +37,12 @@ vecdb = get_vector_store(embeddings)
 proxy_chain = init_chain_proxy(ProxyLLM(), vecdb, 5)
 
 
-def predict(input, history=None):
+def predict(input):
     print(f"预测--->{input}")
-    for resp, history in model.chat(tokenizer, input, history):
-        print(f"回答--->{resp}")
+    for response, history in model.chat(tokenizer, input, history=[]):
+        print(f"回答--->{response}")
         print(f"历史--->{history}")
-        return resp
+        return response
 
 
 def invoke(questions_path):
