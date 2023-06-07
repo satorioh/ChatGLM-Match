@@ -39,8 +39,7 @@ proxy_chain = init_chain_proxy(ProxyLLM(), vecdb, 5)
 
 def predict(input, history=None):
     print(f"预测--->{input}")
-    for resp, history in model.chat(tokenizer, input, history, max_length=4096, top_p=0.8,
-                                    temperature=0.9):
+    for resp, history in model.chat(tokenizer, input, history):
         print(f"回答--->{resp}")
         print(f"历史--->{history}")
         return resp
@@ -63,7 +62,7 @@ def invoke(questions_path):
         # 问题
         question = f"{questions[i]}"
         q = proxy_chain(question)
-        print(f"返回--->>>:{q}", flush=True)
+        # print(f"返回--->>>:{q}", flush=True)
         seen_sources = set()
         for x, doc in enumerate(q["source_documents"]):
             source_name = os.path.split(doc.metadata['source'])[-1]
