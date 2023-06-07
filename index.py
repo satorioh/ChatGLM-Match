@@ -15,6 +15,7 @@ from configs.global_config import (
 
 models_folder = get_abs_path(MODEL_DIR)
 
+
 def get_model():
     tf_limit_memory()
     tokenizer = AutoTokenizer.from_pretrained(
@@ -59,7 +60,7 @@ def invoke(questions_path):
         # 问题
         question = f"{questions[i]}"
         q = proxy_chain(question)
-        print(f"返回--->>>:{q}", flush=True)
+        print(f"返回--->>>:{q}")
         seen_sources = set()
         for x, doc in enumerate(q["source_documents"]):
             source_name = os.path.split(doc.metadata['source'])[-1]
