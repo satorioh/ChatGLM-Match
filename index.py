@@ -66,10 +66,10 @@ def invoke(questions_path):
             if source_name in seen_sources:
                 continue
             seen_sources.add(source_name)
-        source = "\n\n"
-        source += "".join(
+        source = ""
+        source += ",".join(
             [
-                f"""出处[{i + 1}] {name}"""
+                f"""{name}"""
                 for i, name in
                 enumerate(seen_sources)])
         # 提示词
