@@ -72,7 +72,7 @@ def invoke(questions_path):
         source = "\n\n"
         source += "".join(
             [
-                f"""> *出处[{i + 1}] {name}*\n\n"""
+                f"""出处[{i + 1}] {name}"""
                 for i, name in
                 enumerate(seen_sources)])
         # 提示词
