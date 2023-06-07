@@ -58,6 +58,7 @@ def invoke(questions_path):
     for i in range(NUM_OF_QUESTIONS):
         # 问题
         question = f"{questions[i]}"
+        print(f"问题{i + 1}: {question}")
         q = proxy_chain(question)
         # print(f"返回--->>>:{q}", flush=True)
         seen_sources = set()
@@ -67,9 +68,9 @@ def invoke(questions_path):
                 continue
             seen_sources.add(source_name)
         source = ""
-        source += ",".join(
+        source += "".join(
             [
-                f"""{name}"""
+                f"""{name},"""
                 for i, name in
                 enumerate(seen_sources)])
         # 提示词
@@ -81,6 +82,7 @@ def invoke(questions_path):
         d = {}
         d[prompt] = [answer, reference]
         results[question] = d
+        print(f"问题{i + 1}: {question} 回答完成")
 
     return results
 
